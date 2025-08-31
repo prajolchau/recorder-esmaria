@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esmaria Sticker House - Credit Recorder</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <img src="logo.png" alt="Esmaria Sticker House Logo" class="logo-image">
+                <h1>Esmaria Sticker House</h1>
+            </div>
+            <p class="location">Imadol, Lalitpur</p>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <span>+ 977 9810296797</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>esmaria.stickerhouse0@gmail.com</span>
+                </div>
+            </div>
+            <div class="user-info">
+                <span id="currentUser">Welcome, User</span>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav">
+            <button class="nav-btn active" data-tab="customers">
+                <i class="fas fa-users"></i>
+                Customers
+            </button>
+            <button class="nav-btn" data-tab="billing">
+                <i class="fas fa-receipt"></i>
+                Billing
+            </button>
+            <button class="nav-btn" data-tab="credits">
+                <i class="fas fa-credit-card"></i>
+                Credits
+            </button>
+            <button class="nav-btn" data-tab="analytics">
+                <i class="fas fa-chart-line"></i>
+                Analytics
+            </button>
+            <button class="nav-btn" data-tab="settings">
+                <i class="fas fa-cog"></i>
+                Settings
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Customers Section -->
+            <section id="customers" class="tab-content active">
+                <div class="section-header">
+                    <h2><i class="fas fa-users"></i> Customer Management</h2>
+                    <button class="btn btn-primary" onclick="openAddCustomerModal()">
+                        <i class="fas fa-plus"></i> Add New Customer
+                    </button>
+                </div>
+                
+                <div class="search-bar">
+                    <input type="text" id="customerSearch" placeholder="Search customers..." onkeyup="searchCustomers()">
+                    <i class="fas fa-search"></i>
+                </div>
+
+                <div class="customers-grid" id="customersGrid">
+                    <!-- Customers will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Billing Section -->
+            <section id="billing" class="tab-content">
+                <div class="section-header">
+                    <h2><i class="fas fa-receipt"></i> Billing System</h2>
+                    <button class="btn btn-primary" onclick="openNewBillModal()">
+                        <i class="fas fa-plus"></i> New Bill
+                    </button>
+                </div>
+
+                <div class="billing-container">
+                    <div class="bill-form">
+                        <div class="form-group">
+                            <label for="billCustomer">Select Customer:</label>
+                            <select id="billCustomer" required>
+                                <option value="">Choose a customer...</option>
+                            </select>
+                        </div>
+
+                        <div class="products-section">
+                            <h3>Products</h3>
+                            <div class="product-list" id="productList">
+                                <!-- Products will be added here -->
+                            </div>
+                            <button class="btn btn-secondary" onclick="addProductRow()">
+                                <i class="fas fa-plus"></i> Add Product
+                            </button>
+                        </div>
+
+                        <div class="bill-summary">
+                            <div class="summary-item">
+                                <span>Subtotal:</span>
+                                <span id="subtotal">Rs. 0.00</span>
+                            </div>
+                            <div class="summary-item">
+                                <span>Discount:</span>
+                                <input type="number" id="discount" value="0" min="0" step="0.01" onchange="calculateTotal()">
+                            </div>
+                            <div class="summary-item total">
+                                <span>Total:</span>
+                                <span id="total">Rs. 0.00</span>
+                            </div>
+                            <div class="summary-item">
+                                <span>Paid Amount:</span>
+                                <input type="number" id="paidAmount" value="0" min="0" step="0.01" onchange="calculateCredit()">
+                            </div>
+                            <div class="summary-item credit">
+                                <span>Credit:</span>
+                                <span id="creditAmount">Rs. 0.00</span>
+                            </div>
+                        </div>
+
+                        <div class="bill-actions">
+                            <button class="btn btn-success" onclick="saveBill()">
+                                <i class="fas fa-save"></i> Save Bill
+                            </button>
+                            <button class="btn btn-info" onclick="printBill()">
+                                <i class="fas fa-print"></i> Print Bill
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="recent-bills">
+                        <div class="recent-bills-header">
+                            <h3>Recent Bills</h3>
+                            <button class="btn btn-danger" onclick="clearRecentBills()">
+                                <i class="fas fa-trash"></i> Clear All
+                            </button>
+                        </div>
+                        <div class="bills-list" id="billsList">
+                            <!-- Recent bills will be shown here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Credits Section -->
+            <section id="credits" class="tab-content">
+                <div class="section-header">
+                    <h2><i class="fas fa-credit-card"></i> Credit Management</h2>
+                </div>
+
+                <div class="credits-container">
+                    <div class="credits-summary">
+                        <div class="summary-card">
+                            <h3>Total Outstanding</h3>
+                            <p id="totalOutstanding">Rs. 0.00</p>
+                        </div>
+                        <div class="summary-card">
+                            <h3>Total Customers</h3>
+                            <p id="totalCustomers">0</p>
+                        </div>
+                        <div class="summary-card">
+                            <h3>Customers with Credit</h3>
+                            <p id="customersWithCredit">0</p>
+                        </div>
+                    </div>
+
+                    <div class="credits-list" id="creditsList">
+                        <!-- Customers with credits will be shown here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics" class="tab-content">
+                <div class="section-header">
+                    <h2><i class="fas fa-chart-line"></i> Business Analytics</h2>
+                    <div class="analytics-controls">
+                        <button class="btn btn-primary" onclick="exportData()">
+                            <i class="fas fa-download"></i> Export Data
+                        </button>
+                        <button class="btn btn-success" onclick="generateReport()">
+                            <i class="fas fa-file-alt"></i> Generate Report
+                        </button>
+                    </div>
+                </div>
+
+                <div class="analytics-container">
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <h3>Monthly Revenue</h3>
+                            <div class="chart-container">
+                                <canvas id="revenueChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="analytics-card">
+                            <h3>Top Customers</h3>
+                            <div class="chart-container">
+                                <canvas id="customersChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="analytics-card">
+                            <h3>Payment Trends</h3>
+                            <div class="chart-container">
+                                <canvas id="paymentsChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="analytics-card">
+                            <h3>Business Summary</h3>
+                            <div class="summary-stats">
+                                <div class="stat-item">
+                                    <span class="stat-label">Total Revenue</span>
+                                    <span class="stat-value" id="totalRevenue">Rs. 0.00</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Average Bill</span>
+                                    <span class="stat-value" id="avgBill">Rs. 0.00</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Best Month</span>
+                                    <span class="stat-value" id="bestMonth">-</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Payment Rate</span>
+                                    <span class="stat-value" id="paymentRate">0%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="tab-content">
+                <div class="section-header">
+                    <h2><i class="fas fa-cog"></i> System Settings</h2>
+                </div>
+
+                <div class="settings-container">
+                    <div class="settings-grid">
+                        <div class="settings-card">
+                            <h3>Business Information</h3>
+                            <div class="form-group">
+                                <label for="businessName">Business Name:</label>
+                                <input type="text" id="businessName" value="Esmaria Sticker House">
+                            </div>
+                            <div class="form-group">
+                                <label for="businessAddress">Address:</label>
+                                <input type="text" id="businessAddress" value="Imadol, Lalitpur">
+                            </div>
+                            <div class="form-group">
+                                <label for="businessPhone">Phone:</label>
+                                <input type="tel" id="businessPhone" value="9810296797">
+                            </div>
+                            <div class="form-group">
+                                <label for="businessEmail">Email:</label>
+                                <input type="email" id="businessEmail" value="esmaria.stickerhouse0@gmail.com">
+                            </div>
+                            <button class="btn btn-primary" onclick="saveBusinessInfo()">
+                                <i class="fas fa-save"></i> Save Business Info
+                            </button>
+                        </div>
+
+                        <div class="settings-card">
+                            <h3>Data Management</h3>
+                            <div class="data-actions">
+                                <button class="btn btn-info" onclick="backupData()">
+                                    <i class="fas fa-download"></i> Backup Data
+                                </button>
+                                <button class="btn btn-warning" onclick="restoreData()">
+                                    <i class="fas fa-upload"></i> Restore Data
+                                </button>
+                                <button class="btn btn-danger" onclick="clearAllData()">
+                                    <i class="fas fa-trash"></i> Clear All Data
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <h3>Theme & Appearance</h3>
+                            <div class="theme-options">
+                                <label class="theme-option">
+                                    <input type="radio" name="theme" value="default" checked>
+                                    <span class="theme-preview default-theme">Default</span>
+                                </label>
+                                <label class="theme-option">
+                                    <input type="radio" name="theme" value="dark">
+                                    <span class="theme-preview dark-theme">Dark</span>
+                                </label>
+                                <label class="theme-option">
+                                    <input type="radio" name="theme" value="colorful">
+                                    <span class="theme-preview colorful-theme">Colorful</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <h3>Quick Actions</h3>
+                            <div class="quick-actions">
+                                <button class="btn btn-success" onclick="sendReminders()">
+                                    <i class="fas fa-bell"></i> Send Payment Reminders
+                                </button>
+                                <button class="btn btn-info" onclick="generateMonthlyReport()">
+                                    <i class="fas fa-calendar"></i> Monthly Report
+                                </button>
+                                <button class="btn btn-warning" onclick="checkOverdueCredits()">
+                                    <i class="fas fa-exclamation-triangle"></i> Check Overdue
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add Customer Modal -->
+    <div id="addCustomerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Customer</h3>
+                <span class="close" onclick="closeAddCustomerModal()">&times;</span>
+            </div>
+            <form id="addCustomerForm">
+                <div class="form-group">
+                    <label for="customerName">Customer Name:</label>
+                    <input type="text" id="customerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="customerPhone">Phone Number:</label>
+                    <input type="tel" id="customerPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="customerVehicle">Vehicle Number:</label>
+                    <input type="text" id="customerVehicle" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeAddCustomerModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Customer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- New Bill Modal -->
+    <div id="newBillModal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>Create New Bill</h3>
+                <span class="close" onclick="closeNewBillModal()">&times;</span>
+            </div>
+            <div class="bill-form-modal">
+                <div class="form-group">
+                    <label for="modalBillCustomer">Select Customer:</label>
+                    <select id="modalBillCustomer" required>
+                        <option value="">Choose a customer...</option>
+                    </select>
+                </div>
+
+                <div class="products-section">
+                    <h3>Products</h3>
+                    <div class="product-list" id="modalProductList">
+                        <!-- Products will be added here -->
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="addModalProductRow()">
+                        <i class="fas fa-plus"></i> Add Product
+                    </button>
+                </div>
+
+                <div class="bill-summary">
+                    <div class="summary-item">
+                        <span>Subtotal:</span>
+                        <span id="modalSubtotal">Rs. 0.00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Discount:</span>
+                        <input type="number" id="modalDiscount" value="0" min="0" step="0.01" onchange="calculateModalTotal()">
+                    </div>
+                    <div class="summary-item total">
+                        <span>Total:</span>
+                        <span id="modalTotal">Rs. 0.00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Paid Amount:</span>
+                        <input type="number" id="modalPaidAmount" value="0" min="0" step="0.01" onchange="calculateModalCredit()">
+                    </div>
+                    <div class="summary-item credit">
+                        <span>Credit:</span>
+                        <span id="modalCreditAmount">Rs. 0.00</span>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeNewBillModal()">Cancel</button>
+                    <button type="button" class="btn btn-success" onclick="saveModalBill()">
+                        <i class="fas fa-save"></i> Save Bill
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
