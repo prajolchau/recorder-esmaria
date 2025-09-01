@@ -1,0 +1,26 @@
+{
+  "name": "esmaria-sticker-house",
+  "version": "1.0.0",
+  "description": "Esmaria Sticker House - Credit Recorder System",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build step required'",
+    "start": "vercel dev",
+    "setup-db": "node setup-database.js",
+    "quick-setup": "node quick-setup.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.0"
+  },
+  "devDependencies": {
+    "vercel": "^32.0.0"
+  },
+  "keywords": [
+    "credit-recorder",
+    "sticker-house",
+    "business-management"
+  ],
+  "author": "Esmaria Sticker House",
+  "license": "MIT"
+}

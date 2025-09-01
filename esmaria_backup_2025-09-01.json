@@ -1,0 +1,35 @@
+{
+  "customers": [
+    {
+      "id": 1756720579055,
+      "name": "prajwal",
+      "phone": "9840594704",
+      "vehicle": "4016",
+      "credit": 5000,
+      "createdAt": "2025-09-01T09:56:19.055Z"
+    }
+  ],
+  "bills": [
+    {
+      "id": 1,
+      "customerId": 1756720579055,
+      "products": [
+        {
+          "name": "claba",
+          "quantity": 1,
+          "price": 5000,
+          "total": 5000
+        }
+      ],
+      "subtotal": 5000,
+      "discount": 0,
+      "total": 5000,
+      "paidAmount": 0,
+      "credit": 5000,
+      "date": "2025-09-01T09:56:36.431Z"
+    }
+  ],
+  "payments": [],
+  "businessInfo": null,
+  "timestamp": "2025-09-01T09:57:40.606Z"
+}
